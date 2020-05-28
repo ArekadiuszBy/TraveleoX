@@ -220,6 +220,4 @@ public class Timerr extends AppCompatActivity {
             }
         }
     }
-
-
 }

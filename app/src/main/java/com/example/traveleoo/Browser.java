@@ -29,119 +29,16 @@ public class Browser extends AppCompatActivity {
     EditText editText;
     Button button;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_browser);
 
-        editText = (EditText) findViewById(R.id.editText);
-        button = (Button) findViewById((R.id.button));
-        progressBar = (ProgressBar) findViewById((R.id.progressBar));
-        progressBar.setMax(100);
-        progressBar.setVisibility(View.GONE);
+        WebView webView = findViewById(R.id.webView);
+        webView.setWebViewClient(new WebViewClient());      //Tutaj można dodać dodatkowe opcje przeglądarki
 
-        webView = (WebView) findViewById(R.id.webView);
+        webView.loadUrl("https://pl.tripadvisor.com/Attractions-g274723-Activities-Poland.html");
 
-        if(savedInstanceState !=null)
-        {
-            webView.restoreState(savedInstanceState);
-
-        }
-        else {
-            webView.getSettings().setJavaScriptEnabled(true);
-            webView.getSettings().setSupportZoom(true);
-            webView.getSettings().setBuiltInZoomControls(false);
-            webView.getSettings().setLoadWithOverviewMode(true);
-            webView.getSettings().setUseWideViewPort(true);
-            webView.setScrollBarStyle(View.SCROLLBARS_INSIDE_OVERLAY);
-            webView.setBackgroundColor(Color.WHITE);
-
-            webView.setWebViewClient(new onViewClient());
-
-            webView.setWebChromeClient(new WebChromeClient(){
-                @Override
-                public void onProgressChanged(WebView view, int progress) {
-                    progressBar.setProgress(progress);
-                    if(progress < 100 && progressBar.getVisibility() == ProgressBar.GONE){
-                        progressBar.setVisibility(ProgressBar.VISIBLE);
-                    }
-                    if(progress == 100){
-                        progressBar.setVisibility(ProgressBar.GONE);
-
-                    }
-
-                }
-            });
-
-        }
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                webView.loadUrl("http://" + editText.getText().toString());
-                editText.setText("");
-            }
-        });
-    }
-
-    public  class onView extends WebViewClient{
-        @Override
-        public boolean shouldOverrideUrlLoading(WebView view,String url) {
-            view.loadUrl(url);
-            CookieManager.getInstance().setAcceptCookie(true);
-            return true;
-        }
-
-        @Override
-        public void onPageFinished(WebView view, String url) {
-            super.onPageFinished(view, url);
-        }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        webView.saveState(outState);
-
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.item_back:
-                if(webView.canGoBack()){
-                    webView.goBack();
-                }
-                return true;
-
-            case R.id.item_forward:
-                if(webView.canGoForward()){
-                    webView.goForward();
-                }
-                return true;
-
-            case R.id.item_home:
-                InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-                webView.loadUrl("https://google.com");
-                editText.setText("");
-
-                return true;
-
-            default:
-
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
-    private class onViewClient extends WebViewClient {
     }
 }
